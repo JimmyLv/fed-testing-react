@@ -1,27 +1,62 @@
-import axios from 'axios'
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
-const url = "https://randomuser.me/api/?inc=name";
+import { Todo } from "./components/Todo";
+import { TodoForm } from "./components/TodoForm";
+import { TodoType } from './types'
+import { toggleOneTodo } from "./utils/toggleOneTodo";
 
 function App() {
-  const [fullName, setFullName] = useState("");
-  useEffect(() => {
-    axios.get(url).then(({ data }) => {
-      const { first, last } = data.results[0].name;
-      setFullName(`${first} ${last}`);
-    });
-  }, []);
+  const [todos, setTodos] = useState<TodoType[]>([
+    {
+      text: "Learn about React",
+      isCompleted: false,
+    },
+    {
+      text: "Meet friend for lunch",
+      isCompleted: false,
+    },
+    {
+      text: "Build really cool todo app",
+      isCompleted: false,
+    },
+  ]);
+
+  const addTodo = (text: string) => {
+    const newTodos = [...todos, { text }];
+    setTodos(newTodos);
+  };
+
+  const completeTodo = (index: number) => {
+    const newTodos = [...todos];
+    newTodos[index].isCompleted = true;
+    setTodos(newTodos);
+  };
+
+  const toggleTodo = (index: number) => {
+    const newTodos = toggleOneTodo(todos, index);
+    setTodos(newTodos);
+  };
+
+  const removeTodo = (index: number) => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
+
   return (
-    <div className="App">
-      <input
-        type="text"
-        placeholder={"Type your name"}
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}
-      />
-      <p>
-        my name is <span data-testid="full-name">{fullName}</span>
-      </p>
+    <div className="app">
+      <div className="todo-list">
+        {todos.map((todo, index) => (
+          <Todo
+            key={index}
+            index={index}
+            todo={todo}
+            toggleTodo={toggleTodo}
+            removeTodo={removeTodo}
+          />
+        ))}
+        <TodoForm addTodo={addTodo} />
+      </div>
     </div>
   );
 }
