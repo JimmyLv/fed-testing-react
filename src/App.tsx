@@ -26,12 +26,6 @@ function App() {
     setTodos(newTodos);
   };
 
-  const completeTodo = (index: number) => {
-    const newTodos = [...todos];
-    newTodos[index].isCompleted = true;
-    setTodos(newTodos);
-  };
-
   const toggleTodo = (index: number) => {
     const newTodos = toggleOneTodo(todos, index);
     setTodos(newTodos);

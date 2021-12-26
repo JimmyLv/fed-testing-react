@@ -14,6 +14,7 @@ export function TodoForm({ addTodo }: { addTodo: (todo: string) => void }) {
     <form onSubmit={handleSubmit}>
       <input
         type="text"
+        placeholder={`What's your plan?`}
         className="input"
         value={value}
         onChange={(e) => setValue(e.target.value)}

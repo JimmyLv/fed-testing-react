@@ -16,13 +16,14 @@ export function Todo({
   return (
     <div
       className="todo"
+      data-testid="todo-item"
       style={{ textDecoration: todo.isCompleted ? "line-through" : "" }}
     >
       {todo.text}
 
       <div>
         <button onClick={() => toggleTodo(index)}>{toggleText}</button>
-        <button data-cy="remove" onClick={() => removeTodo(index)}>
+        <button data-cy="remove" data-testid="remove-todo" onClick={() => removeTodo(index)}>
           x
         </button>
       </div>
