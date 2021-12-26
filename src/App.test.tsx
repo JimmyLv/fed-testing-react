@@ -1,9 +1,14 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
+import App from "./App";
 
-test('renders learn react link', () => {
+test("should show full name when type", () => {
+  // given
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const name = "John Doe"
+  // when
+  userEvent.type(screen.getByPlaceholderText("Type your name"), name);
+  // then
+  expect(screen.getByText(name)).toBeInTheDocument();
 });
