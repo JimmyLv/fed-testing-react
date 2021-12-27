@@ -1,6 +1,13 @@
 import { mount } from "@cypress/react";
+import React from "react";
+import { Provider } from "react-redux";
 import App from "../App";
+import { initStore } from "../store/store";
 import { Todo } from "./Todo";
+
+const ReduxWrapper: React.FC = ({ children }) => (
+  <Provider store={initStore()}>{children}</Provider>
+);
 
 export function mountWithStyle(comp: React.ReactElement) {
   return mount(comp, {
@@ -13,11 +20,16 @@ export function mountWithStyle(comp: React.ReactElement) {
 describe("Todo App", () => {
   context("App", () => {
     beforeEach(() => {
-      mount(<App />, {
-        stylesheets: [
-          "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css",
-        ],
-      });
+      mount(
+        <ReduxWrapper>
+          <App />
+        </ReduxWrapper>,
+        {
+          stylesheets: [
+            "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css",
+          ],
+        }
+      );
     });
     it("should works", () => {
       cy.get(".todo").should("have.length", 3);
@@ -37,12 +49,9 @@ describe("Todo App", () => {
       isCompleted: false,
     };
     mountWithStyle(
-      <Todo
-        todo={todo}
-        index={todo.id}
-        toggleTodo={cy.stub()}
-        removeTodo={cy.stub()}
-      />
+      <ReduxWrapper>
+        <Todo todo={todo} index={todo.id} />
+      </ReduxWrapper>
     );
     cy.contains(".todo button", "Complete");
   });
@@ -54,12 +63,9 @@ describe("Todo App", () => {
       isCompleted: true,
     };
     mountWithStyle(
-      <Todo
-        todo={todo}
-        index={todo.id}
-        toggleTodo={cy.stub()}
-        removeTodo={cy.stub()}
-      />
+      <ReduxWrapper>
+        <Todo todo={todo} index={todo.id} />
+      </ReduxWrapper>
     );
     cy.contains(".todo button", "Redo");
   });
@@ -70,14 +76,10 @@ describe("Todo App", () => {
       text: "test todo",
       isCompleted: true,
     };
-    const removeTodo = cy.stub().as("remove");
     mountWithStyle(
-      <Todo
-        todo={todo}
-        index={todo.id}
-        toggleTodo={cy.stub()}
-        removeTodo={removeTodo}
-      />
+      <ReduxWrapper>
+        <Todo todo={todo} index={todo.id} />
+      </ReduxWrapper>
     );
     cy.contains(".todo", "test todo")
       .find('[data-testid="remove-todo"]')
@@ -91,14 +93,10 @@ describe("Todo App", () => {
       text: "test todo",
       isCompleted: false,
     };
-    const toggleTodo = cy.stub().as("toggle");
     mountWithStyle(
-      <Todo
-        todo={todo}
-        index={todo.id}
-        toggleTodo={toggleTodo}
-        removeTodo={cy.stub()}
-      />
+      <ReduxWrapper>
+        <Todo todo={todo} index={todo.id} />
+      </ReduxWrapper>
     );
     cy.contains(".todo", "test todo").contains("Complete").click();
     cy.get("@toggle").should("be.calledWith", todo.id);
