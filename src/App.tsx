@@ -7,6 +7,11 @@ function App() {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  if (process.env.NODE_ENV === "development") {
+    const { worker } = require("./mocks/browser");
+    worker.start();
+  }
+
   useEffect(() => {
     setLoading(true);
     axios.get(url).then(({ data }) => {

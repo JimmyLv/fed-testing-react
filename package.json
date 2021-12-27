@@ -46,5 +46,8 @@
     "lint-staged": "^12.1.4",
     "prettier": "^2.5.1",
     "simple-git-hooks": "^2.7.0"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

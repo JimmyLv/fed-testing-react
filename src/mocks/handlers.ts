@@ -5,7 +5,7 @@ export const handlers = [
     return res(
       ctx.status(200),
       ctx.json({
-        results: [{ name: { title: "Mr", first: "Oskari", last: "Wirtanen" } }],
+        results: [{ name: { title: "Mr", first: "Jimmy", last: "Wirtanen" } }],
       })
     );
   }),
