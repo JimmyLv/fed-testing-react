@@ -1,0 +1,11 @@
+{
+  "fixturesFolder": false,
+  "testFiles": "**/*spec.{js,jsx,ts,tsx}",
+  "viewportWidth": 600,
+  "viewportHeight": 600,
+  "baseUrl": "http://localhost:3000",
+  "component": {
+    "componentFolder": "src",
+    "testFiles": "**/*.spec.{js,jsx,ts,tsx}"
+  }
+}
