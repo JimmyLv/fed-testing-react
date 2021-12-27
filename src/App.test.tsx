@@ -1,10 +1,11 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import App from "./App";
+import { renderWithRedux } from "./test-utils/renderWithRedux";
 
 test("should render todo list", () => {
-  render(<App />);
+  renderWithRedux(<App />);
 
   const todos = screen.getAllByTestId("todo-item");
 
@@ -12,7 +13,7 @@ test("should render todo list", () => {
 });
 
 test("should add todo", () => {
-  render(<App />);
+  renderWithRedux(<App />);
 
   userEvent.type(
     screen.getByPlaceholderText("What's your plan?"),
@@ -24,7 +25,7 @@ test("should add todo", () => {
 });
 
 test("should remove todo", () => {
-  render(<App />);
+  renderWithRedux(<App />);
 
   userEvent.click(
     within(screen.getByText("Learn about React")).getByTestId("remove-todo")
@@ -33,7 +34,7 @@ test("should remove todo", () => {
 });
 
 test("should toggle todo completed", () => {
-  render(<App />);
+  renderWithRedux(<App />);
 
   const firstTodo = within(screen.getByText("Learn about React"));
   userEvent.click(firstTodo.getByText("Complete"));

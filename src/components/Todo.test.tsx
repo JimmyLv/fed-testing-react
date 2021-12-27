@@ -1,6 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import React from "react";
+import { store as initStore } from "../store/store";
+import { deleteTodo, toggleTodo } from "../store/todo";
+import { renderWithRedux } from '../test-utils/renderWithRedux'
 import { Todo } from "./Todo";
+
+jest.spyOn(initStore, "dispatch");
 
 describe("Todo component", () => {
   test("should render new item", () => {
@@ -9,14 +15,7 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: false,
     };
-    render(
-      <Todo
-        todo={todo}
-        toggleTodo={jest.fn()}
-        removeTodo={jest.fn()}
-        index={todo.id}
-      />
-    );
+    renderWithRedux(<Todo todo={todo} index={todo.id} />);
     expect(screen.getByText("Hello World")).toBeInTheDocument();
   });
   test("should render isCompleted item", () => {
@@ -25,14 +24,7 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: true,
     };
-    render(
-      <Todo
-        todo={todo}
-        toggleTodo={jest.fn()}
-        removeTodo={jest.fn()}
-        index={todo.id}
-      />
-    );
+    renderWithRedux(<Todo todo={todo} index={todo.id} />);
     expect(screen.getByText("Redo")).toBeInTheDocument();
   });
   test("should toggle item", () => {
@@ -41,17 +33,9 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: true,
     };
-    const toggleTodo = jest.fn();
-    render(
-      <Todo
-        todo={todo}
-        toggleTodo={toggleTodo}
-        removeTodo={jest.fn()}
-        index={todo.id}
-      />
-    );
+    renderWithRedux(<Todo todo={todo} index={todo.id} />);
     userEvent.click(screen.getByText("Redo"));
-    expect(toggleTodo).toHaveBeenCalledTimes(1);
+    expect(initStore.dispatch).toHaveBeenCalledWith(toggleTodo(todo.id));
   });
   test("should toggle item when todo not completed", () => {
     const todo = {
@@ -59,17 +43,9 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: false,
     };
-    const toggleTodo = jest.fn();
-    render(
-      <Todo
-        todo={todo}
-        toggleTodo={toggleTodo}
-        removeTodo={jest.fn()}
-        index={todo.id}
-      />
-    );
+    renderWithRedux(<Todo todo={todo} index={todo.id} />);
     userEvent.click(screen.getByText("Complete"));
-    expect(toggleTodo).toHaveBeenCalledTimes(1);
+    expect(initStore.dispatch).toHaveBeenCalledWith(toggleTodo(todo.id));
   });
   test("should delete item", () => {
     const todo = {
@@ -77,16 +53,8 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: true,
     };
-    const removeTodo = jest.fn()
-    render(
-      <Todo
-        todo={todo}
-        toggleTodo={jest.fn()}
-        removeTodo={removeTodo}
-        index={todo.id}
-      />
-    );
+    renderWithRedux(<Todo todo={todo} index={todo.id} />);
     userEvent.click(screen.getByText("x"));
-    expect(removeTodo).toHaveBeenCalledTimes(1);
+    expect(initStore.dispatch).toHaveBeenCalledWith(deleteTodo(todo.id));
   });
 });
