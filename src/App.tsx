@@ -1,16 +1,25 @@
-import axios from 'axios'
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 const url = "https://randomuser.me/api/?inc=name";
 
 function App() {
   const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
+    setLoading(true);
     axios.get(url).then(({ data }) => {
       const { first, last } = data.results[0].name;
       setFullName(`${first} ${last}`);
+      setLoading(false);
     });
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="App">
       <input

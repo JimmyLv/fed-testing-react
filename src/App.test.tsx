@@ -3,12 +3,24 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import App from "./App";
 
-test("should show full name when type", () => {
+test("should show full name when type", async () => {
   // given
   render(<App />);
-  const name = "John Doe"
+  const appendText = " Welcome!";
   // when
-  userEvent.type(screen.getByPlaceholderText("Type your name"), name);
+  const input = await screen.findByPlaceholderText("Type your name");
+  userEvent.type(input, appendText);
   // then
-  expect(screen.getByText(name)).toBeInTheDocument();
+  expect(screen.getByText(/welcom/i).textContent).toMatchInlineSnapshot(
+    `"Oskari Wirtanen Welcome!"`
+  );
+});
+
+test("should display name from api directly", async () => {
+  // given
+  render(<App />);
+  // when
+  const text = await screen.findByText(/Oskari Wirtanen/gi);
+  // then
+  expect(text).toBeInTheDocument();
 });
