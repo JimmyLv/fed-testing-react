@@ -7,8 +7,11 @@ export function renderWithRedux(
   ui: React.ReactElement,
   { store = initStore(), ...renderOptions } = {}
 ) {
+  jest.spyOn(store, "dispatch");
+
   const Wrapper: React.FC = ({ children }) => (
     <Provider store={store}>{children}</Provider>
   );
-  return render(ui, { wrapper: Wrapper, ...renderOptions });
+  const result = render(ui, { wrapper: Wrapper, ...renderOptions });
+  return { ...result, store };
 }

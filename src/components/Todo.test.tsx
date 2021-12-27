@@ -1,12 +1,9 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { store as initStore } from "../store/store";
 import { deleteTodo, toggleTodo } from "../store/todo";
-import { renderWithRedux } from '../test-utils/renderWithRedux'
+import { renderWithRedux } from "../test-utils/renderWithRedux";
 import { Todo } from "./Todo";
-
-jest.spyOn(initStore, "dispatch");
 
 describe("Todo component", () => {
   test("should render new item", () => {
@@ -33,9 +30,11 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: true,
     };
-    renderWithRedux(<Todo todo={todo} index={todo.id} />);
+    const { store } = renderWithRedux(<Todo todo={todo} index={todo.id} />);
+
     userEvent.click(screen.getByText("Redo"));
-    expect(initStore.dispatch).toHaveBeenCalledWith(toggleTodo(todo.id));
+
+    expect(store.dispatch).toHaveBeenCalledWith(toggleTodo(todo.id));
   });
   test("should toggle item when todo not completed", () => {
     const todo = {
@@ -43,9 +42,11 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: false,
     };
-    renderWithRedux(<Todo todo={todo} index={todo.id} />);
+    const { store } = renderWithRedux(<Todo todo={todo} index={todo.id} />);
+
     userEvent.click(screen.getByText("Complete"));
-    expect(initStore.dispatch).toHaveBeenCalledWith(toggleTodo(todo.id));
+
+    expect(store.dispatch).toHaveBeenCalledWith(toggleTodo(todo.id));
   });
   test("should delete item", () => {
     const todo = {
@@ -53,8 +54,10 @@ describe("Todo component", () => {
       text: "Hello World",
       isCompleted: true,
     };
-    renderWithRedux(<Todo todo={todo} index={todo.id} />);
+    const { store } = renderWithRedux(<Todo todo={todo} index={todo.id} />);
+
     userEvent.click(screen.getByText("x"));
-    expect(initStore.dispatch).toHaveBeenCalledWith(deleteTodo(todo.id));
+
+    expect(store.dispatch).toHaveBeenCalledWith(deleteTodo(todo.id));
   });
 });
